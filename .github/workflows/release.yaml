@@ -17,8 +17,14 @@ jobs:
         with:
           reference: main
           tag: ${{ github.ref }}
+      - run: |
+          if [[ ${{ steps.contains_tag.outputs.retval }} != 'true' ]]; then
+            echo "Branch/commit did contain the tag."
+            exit 1
+          else
+            echo "Branch/commit did not contain the tag."
+          fi
       - name: Create Release
-        if: ${{ success() }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
